@@ -17,7 +17,7 @@ class CreateUsersTitlesTable extends Migration
           $table->increments('id');
           $table->unsignedInteger('id_department')->nullable();
           $table->foreign('id_department')->references('id')->on('users_departments');
-          $table->unisignedInteger('id_sub_department')->nullable();
+          $table->unsignedInteger('id_sub_department')->nullable();
           $table->foreign('id_sub_department')->references('id')->on('users_sub_departments');
           $table->string('name');
           $table->string('color',50)->default('#000000');
@@ -34,6 +34,6 @@ class CreateUsersTitlesTable extends Migration
   */
   public function down()
   {
-      Schema::dropIfExists('users_sub_departments');
+      Schema::dropIfExists('users_titles');
   }
 }
