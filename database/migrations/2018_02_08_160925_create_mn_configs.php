@@ -15,10 +15,12 @@ class CreateMnConfigs extends Migration
   {
     Schema::create('mn_configs',function (Blueprint $table){
       $table->increments('id');
-      $table->string('key',150);
-      $table->string('section',200)->nullable();
-      $table->string('value');
+      $table->string('key');
+      $table->string('name')->nullable();
+      $table->string('value')->nullable();
       $table->text('description')->nullable();
+      $table->text('field')->nullable();
+      $table->tinyInteger('active')->default(1);
       $table->timestamps();
     });
   }
