@@ -13,7 +13,7 @@ class AddFieldsUsersTable extends Migration
   */
   public function up()
   {
-    Schema::talble('users', function (Blueprint $table) {
+    Schema::table('users', function (Blueprint $table) {
       $table->string('email1')->nullable();
       $table->string('firstname');
       $table->string('lastname')->nullable();
@@ -32,7 +32,7 @@ class AddFieldsUsersTable extends Migration
       $table->foreign('id_department')->references('id')->on('users_departments');
 
       $table->boolean('is_admin')->default(0);
-      $table->unsignedSmallInteger('id_role')->nullable();
+      $table->unsignedInteger('id_role')->nullable();
       $table->foreign('id_role')->references('id')->on('users_roles');
 
       $table->string('date_format',30)->default('dd/mm/yyyy');
@@ -42,11 +42,18 @@ class AddFieldsUsersTable extends Migration
       $table->unsignedTinyInteger('day_of_week')->default(1);
       $table->unsignedTinyInteger('call_duration')->default(5);
       $table->unsignedTinyInteger('other_duration')->default(240);
-      $table->unisignedInteger('id_user_report_to')->default(1);
-      $table->unisignedInteger('id_user_created')->default(1);
-      $table->unisignedInteger('id_user_modified')->default(1);
+
+      $table->unsignedInteger('id_user_report_to')->nullable();
+      $table->foreign('id_user_report_to')->references('id')->on('users');
+      $table->unsignedInteger('id_user_created')->nullable();
+      $table->foreign('id_user_created')->references('id')->on('users');
+      $table->unsignedInteger('id_user_modified')->nullable();
+      $table->foreign('id_user_modified')->references('id')->on('users');
+
       $table->unsignedTinyInteger('status')->default(0);
       $table->softDeletes();
+      $table->rememberToken();
+      $table->timestamps();
     });
   }
 
@@ -57,6 +64,46 @@ class AddFieldsUsersTable extends Migration
   */
   public function down()
   {
-    //
+    Schema::table('users', function (Blueprint $table) {
+      $table->dropColumn('email1');
+      $table->dropColumn('firstname');
+      $table->dropColumn('lastname');
+      $table->dropColumn('address');
+      $table->dropColumn('photo');
+      $table->dropColumn('mobile');
+      $table->dropColumn('mobile1');
+
+      $table->dropForeign('users_id_title_foreign');
+      $table->dropColumn('id_title');
+
+      $table->dropForeign('users_id_sub_department_foreign');
+      $table->dropColumn('id_sub_department');
+
+      $table->dropForeign('users_id_department_foreign');
+      $table->dropColumn('id_department');
+
+      $table->dropForeign('users_id_role_foreign');
+      $table->dropColumn('id_role');
+
+      $table->dropColumn('is_admin');
+
+      $table->dropColumn('date_format');
+      $table->dropColumn('hour_format');
+      $table->dropColumn('hour_start');
+      $table->dropColumn('hour_end');
+      $table->dropColumn('day_of_week');
+      $table->dropColumn('call_duration');
+      $table->dropColumn('other_duration');
+
+      $table->dropForeign('users_id_user_report_to_foreign');
+      $table->dropColumn('id_user_report_to');
+      $table->dropForeign('users_id_user_created_foreign');
+      $table->dropColumn('id_user_created');
+      $table->dropForeign('users_id_user_modified_foreign');
+      $table->dropColumn('id_user_modified');
+
+      $table->dropColumn('status');
+      $table->dropColumn('deleted_at');
+    });
   }
 }

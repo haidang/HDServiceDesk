@@ -18,6 +18,7 @@ class CreateUsersDepartmentsTable extends Migration
           $table->string('name');
           $table->string('color',50)->default('#000000');
           $table->text('description');
+          $table->unsignedTinyInteger('status')->default(1);
           $table->softDeletes();
           $table->timestamps();
       });

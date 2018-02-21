@@ -18,6 +18,7 @@ class CreateUsersRolesTable extends Migration
             $table->string('name');
             $table->text('description');
             //$table->unisignedInteger('parent');
+            $table->unsignedTinyInteger('status')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
