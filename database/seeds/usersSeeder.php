@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+
 class usersSeeder extends Seeder
 {
   /**
@@ -10,7 +12,7 @@ class usersSeeder extends Seeder
   * @return void
   */
   //protected $pass = Hash::make('123321');
-  protected $users = [
+  protected $values = [
     ['username'=>'admin',
     'email'=>'nvanhaidang@gmail.com',
     'password'=>'123321',
@@ -28,6 +30,13 @@ class usersSeeder extends Seeder
   ];
   public function run()
   {
-    DB::table('users')->insert($this->users);
+    foreach ($this->values as $index => $val) {
+      $result = User::create($val);
+      if (!$result) {
+        $this->command->info("=>Insert failed at record $index.");
+        return;
+      }
+    }
+    $this->command->info('=>Inserted '.count($this->values).' records.');
   }
 }

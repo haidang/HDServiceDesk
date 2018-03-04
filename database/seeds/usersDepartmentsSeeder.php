@@ -9,12 +9,19 @@ class usersDepartmentsSeeder extends Seeder
   *
   * @return void
   */
-  protected $dept = [
+  protected $values = [
     ['name'=>'Admin','color'=>'#000000','description'=>'Administrator',],
     ['name'=>'P.Kinh Doanh','color'=>'#000000','description'=>'Phòng Kinh Doanh',],
   ];
   public function run()
   {
-    DB::table('users_departments')->insert($this->dept);
+    foreach ($this->values as $index => $val) {
+      $result = DB::table('users_departments')->insert($val);
+      if (!$result) {
+        $this->command->info("=>Insert failed at record $index.");
+        return;
+      }
+    }
+    $this->command->info('=>Inserted '.count($this->values).' records.');
   }
 }

@@ -15,5 +15,8 @@ return [
 
     'failed' => 'Tên đăng nhập / Mật khẩu sai',
     'throttle' => 'Quá nhiều lần đăng nhập. Vui lòng thử lại trong :seconds giây.',
+	'logout'	=> 'Đăng xuất',
+	'profile'	=> 'Hồ sơ',
+	'username'	=> 'Tên đăng nhập',
 
 ];

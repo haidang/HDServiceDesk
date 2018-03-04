@@ -30,10 +30,10 @@ class mn_configsSeeder extends Seeder
     foreach ($this->configs as $index => $config) {
       $result = DB::table('mn_configs')->insert($config);
       if (!$result) {
-        $this->command->info("Insert failed at record $index.");
+        $this->command->info("=>Insert failed at record $index.");
         return;
       }
     }
-  $this->command->info('Inserted '.count($this->configs).' records.');
+    $this->command->info('=>Inserted '.count($this->configs).' records.');
   }
 }

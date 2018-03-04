@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.breadcrumb{
+	text-align: right;
+	top: 8px !important;
+}
+
+.dt-body-center {
+	text-align: center;
+}

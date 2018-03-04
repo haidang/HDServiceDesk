@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'files' => storage_path('framework/sessions'),
+    'files' => storage_path('framework/sessions/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,11 +122,11 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        str_slug(env('APP_NAME', 'HDServiceDesk'), '_').'_session'
-    ),
-
+    // 'cookie' => env(
+    //     'SESSION_COOKIE',
+    //     str_slug(env('APP_NAME', 'HDServiceDesk'), '_').'session'
+    // ),
+    'cookie' => 'HDS_session',
     /*
     |--------------------------------------------------------------------------
     | Session Cookie Path

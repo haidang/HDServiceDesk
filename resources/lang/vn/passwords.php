@@ -12,7 +12,7 @@ return [
     | has failed, such as for an invalid token or invalid new password.
     |
     */
-
+	'pass'	=> 'Mật khẩu',
     'password' => 'Mật khẩu phải có ít nhất 6 ký tự.',
     'reset' => 'Mật khẩu của bạn đã được thiết lập lại!',
     'sent' => 'Hệ thống đã gửi mail có link thiết lập lại mật khẩu cho bạn!',
