@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
   {
     Schema::defaultStringLength(191); //Solved by increasing StringLength
     view()->composer('layouts.partials.sidebar',function($view){
-      $menus = MainModules::where('is_menu',1)->where('status',1)
+      $menus = MainModules::where([['status',1],['is_menu',1]])
         ->orderBy('sort')
         ->get();
       $view->with('menus',$menus);

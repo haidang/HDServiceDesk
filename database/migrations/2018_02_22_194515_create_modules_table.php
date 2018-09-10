@@ -15,12 +15,12 @@ class CreateModulesTable extends Migration
   {
     Schema::create('mn_modules', function(Blueprint $table) {
       $table->smallIncrements('id');
-      $table->unsignedSmallInteger('parent')->nullable();
+      $table->unsignedSmallInteger('parent')->nullable()->default(0);
       $table->string('name');
       $table->string('label')->nullable();
       $table->string('description')->nullable();
-      $table->string('fa_icon',50)->nullable();
-      $table->boolean('is_menu')->default(TRUE);
+      $table->string('fa_icon',50)->nullable()->default('fa fa-cube');
+      $table->boolean('is_menu')->default(1);
       $table->string('url')->nullable();
       $table->unsignedSmallInteger('sort')->nullable();
       $table->unsignedTinyInteger('status')->default(1);

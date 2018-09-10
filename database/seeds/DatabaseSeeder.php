@@ -19,5 +19,12 @@ class DatabaseSeeder extends Seeder
         $this->call(usersTitlesSeeder::class);
         $this->call(usersRolesSeeder::class);
         $this->call(usersSeeder::class);
+        $this->call(pickCategoriesSeeder::class);
+        $this->call(pickPicklistsSeeder::class);
+        $this->call(pickCitiesSeeder::class);
+        $this->call(custCustomersSeeder::class);
+        $this->call(custContactsSeeder::class);
+
+        //$this->call(pickDistrictsSeeder::class);
     }
 }

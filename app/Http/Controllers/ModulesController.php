@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Models\MainModules;
 use Yajra\DataTables\DataTables;
+use Validator;
+use Response;
+use Illuminate\Support\Facades\Input;
 
 class ModulesController extends Controller
 {
@@ -19,31 +22,100 @@ class ModulesController extends Controller
      $this->middleware('auth');
    }
 
-   public $listing_cols = ['id','label','description','parent'];
+   public $listing_cols = ['id','name','label','fa_icon','is_menu','description','parent','sort'];
 
-   public function getAjaxModuleData()
-   {
-     // $module = MainModules::where([['status',1],['deleted_at',Null]])->get();
-     // return  json_encode(['data'=>$module]);
-
+   public function getItemDetail($id){
+     $value = MainModules::where('id',$id)->first();
+      if ($value){
+        return Response::json($value);
+      }
+   }
+   public function AjaxModuleData() {
      $values = MainModules::select($this->listing_cols)
-        ->where([['status',1],['deleted_at',Null]])
+        ->where('status',1)->orderBy('sort','asc')
         ->get();
+
     return Datatables::of($values)
+      ->editColumn('label', function ($values) {
+				return '<strong><i class="'.$values->fa_icon.'"></i><a class="showItem" href="'.$values->label.'" data-id="'.$values->id.'"> '.$values->label.'</a></strong>';
+			})
+      ->editColumn('is_menu', function ($values) {
+        if ($values->is_menu) {
+          return '<input type="checkbox" name="swIsMenu" class="js-switch swIsMenu" checked data-id="'.$values->id.'">';
+        } else {
+          return '<input type="checkbox" class="js-switch swIsMenu" data-id="'.$values->id.'">';
+        }
+			})
       ->addColumn('actions', function ($values) {
-        return '<a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-edit"></span></a> <button class="btn btn-xs btn-warning btnDelete" data-id="'.$values->id.'" data-deletemsg="'.trans("message.deleteConfirm",['item'=>$values->name]).'"><span class="glyphicon glyphicon-trash"></span></button>';
+        return '
+        <button type="button" class="btn btn-xs btn-primary btnEdit" data-id='.$values->id.'>
+          <span class="glyphicon glyphicon-edit" />
+        </button>
+        <button class="btn btn-xs btn-warning btnDelete" data-id='.$values->id.' data-deletemsg="'.trans('messages.deleteConfirm',['name'=>$values->name]).'">
+          <span class="glyphicon glyphicon-trash" />
+        </button>';
       })
       ->addColumn('parent',function($values){
         if ($values->getParent) return $values->getParent->label;
       })
-      ->rawColumns(['actions','name',])
+      ->rawColumns(['actions','name','label','is_menu'])
       ->make(true);
+   }
+
+   public function ChangeIsMenu(Request $request, $id){
+     $rules = array(
+       'checkBol'        => 'required',
+     );
+     $validator = Validator::make(Input::all(),$rules);
+     if($validator->fails())
+       $notification = array('message' => trans('messages.SystemError'),
+         'title' => trans('messages.alert'),'type' => 'warning',
+       );
+     else{
+    	$data = MainModules::find($id);
+    	$data->is_menu = $request->checkBol;
+     if($data->save()) {
+       $notification = array('message' => trans('commons.Update').' '.trans('commons.module').' '.trans('messages.success'),
+         'title' => trans('messages.alert'),'type' => 'success',
+       );
+     } else {
+       $notification = array('message' => trans('messages.SystemError'),
+         'title' => trans('messages.alert'),'type' => 'warning',
+       );
+     }
+     return Response::json(['data'=>$data,'notification'=>$notification]);
+    }
+   }
+
+   public function ChangeSort(Request $request) {
+     $rules = array(
+       'sort'        => 'required',
+     );
+     $validator = Validator::make(Input::all(),$rules);
+     if($validator->fails())
+       $notification = array('message' => trans('messages.SystemError'),
+         'title' => trans('messages.alert'),'type' => 'warning',);
+     else{
+       $items = $request->sort;
+       for ($i = 0; $i < count($items); $i++) {
+         $data = MainModules::find($items[$i]['id']);
+         if($data) {
+           $data->sort = $items[$i]['sort'];
+           $data->save();
+           $notification = array('message' => trans('commons.Update').' '.trans('commons.module').' '.trans('messages.success'),
+             'title' => trans('messages.alert'),'type' => 'success',
+           );
+         }
+       }
+     }
+     return Response::json(['data'=>$data,'notification'=>$notification]);
    }
 
    public function index()
    {
+     $modules = MainModules::where([['status',1],])->get();
      $module = MainModules::where([['status',1],['name','module']])->first();
-     return view('pages.modules.index',compact('module'));
+     return view('pages.modules.index',compact('module','modules'));
    }
 
   /**
@@ -53,7 +125,7 @@ class ModulesController extends Controller
    */
   public function create()
   {
-    //
+    echo 'ok';
   }
 
   /**
@@ -64,7 +136,35 @@ class ModulesController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    $rules = array(
+      'Name'        => 'required|max:190|unique:mn_modules',
+      'Label'       => 'required|max:190',
+		);
+		$validator = Validator::make(Input::all(),$rules);
+		if($validator->fails())
+			return Response::json(array('errors' => $validator->getMessageBag()));
+		else{
+			$data = new MainModules;
+			$data->name = $request->Name;
+			$data->label = $request->Label;
+			if ($request->fa_icon) $data->fa_icon = $request->Icon;
+			if ($request->Url) $data->url = $request->Url;
+			if ($request->Parent) $data->parent = $request->Parent;
+			$data->is_menu = $request->IsMenu;
+			$data->description = $request->Description;
+      if($data->save()) {
+        $data->sort = $data->id;
+        $data->save();
+        $notification = array('message' => trans('commons.Add').' '.trans('commons.module').' '.trans('messages.success'),
+          'title' => trans('messages.alert'),'type' => 'success',
+        );
+      } else {
+        $notification = array('message' => trans('messages.SystemError'),
+          'title' => trans('messages.alert'),'type' => 'warning',
+        );
+      }
+      return Response::json(['notification'=>$notification]);
+		}
   }
 
   /**
@@ -98,7 +198,33 @@ class ModulesController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $rules = array(
+      'Name'        => 'required|max:190',
+      'Label'       => 'required|max:190',
+		);
+		$validator = Validator::make(Input::all(),$rules);
+		if($validator->fails())
+			return Response::json(array('errors' => $validator->getMessageBag()));
+		else{
+			$data = MainModules::find($id);
+			$data->name = $request->Name;
+			$data->label = $request->Label;
+			$data->fa_icon = $request->Icon;
+			$data->url = $request->Url;
+			if ($request->Parent) $data->parent = $request->Parent;
+			$data->is_menu = $request->IsMenu;
+			$data->description = $request->Description;
+      if($data->save()) {
+        $notification = array('message' => trans('commons.Update').' '.trans('commons.module').' '.trans('messages.success'),
+          'title' => trans('messages.alert'),'type' => 'success',
+        );
+      } else {
+        $notification = array('message' => trans('messages.SystemError'),
+          'title' => trans('messages.alert'),'type' => 'warning',
+        );
+      }
+      return Response::json(['data'=>$data,'notification'=>$notification]);
+		}
   }
 
   /**
@@ -109,6 +235,28 @@ class ModulesController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $tb = MainModules::find($id);
+    if ($tb->forceDelete()) {
+      $notification = array('message' => trans('commons.Update').' '.trans('commons.module').' '.trans('messages.success'),
+        'title' => trans('messages.alert'),'type' => 'success',
+      );
+    } else {
+      $notification = array('message' => trans('messages.SystemError'),
+        'title' => trans('messages.alert'),'type' => 'warning',);
+    };
+    return Response::json(['notification'=>$notification]);
   }
+
+  public function softDelete($id)
+  {
+    $tb = Modules::find($id);
+    $tb->delete();
+    return "Success";
+  }
+
+  public function restore($id) {
+    $tb = Modules::find($id)->restore();
+    $tb->save();
+    return "Success";
+}
 }

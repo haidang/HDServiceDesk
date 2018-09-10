@@ -23,20 +23,26 @@ Route::get('/welcome', function () {
 
 Route::post('/config/storeSidebarState', 'ConfigsController@storeSidebarState')->name('storeSidebarState');
 
-Route::get('/calendar', 'CalendarController@index')->name('calendar');
+//Route::get('/calendar', 'CalendarController@index')->name('calendar');
 Route::get('/contact', 'ContactsController@index')->name('contact');
+Route::group(['prefix'=>'customer'],function(){
+	Route::get('ajax/AjaxCustomerData', 'CustomersController@AjaxCustomerData')->name('AjaxCustomerData');
+	Route::resource('/', 'CustomersController');
+});
 Route::get('/customer', 'CustomersController@index')->name('customer');
 Route::get('/ticket', 'TicketsController@index')->name('ticket');
-
+Route::group(['prefix'=>'calendar'],function(){
+	Route::resource('/', 'CalendarController');
+});
 Route::group(['prefix'=>'setting'],function(){
-	Route::get('/')->name('setting');
-	Route::get('/config', 'ConfigsController@index')->name('config');
-	Route::group(['prefix'=>'module'],function(){
-		Route::get('/', 'ModulesController@index')->name('module');
-		Route::get('/getAjaxModuleData', 'ModulesController@getAjaxModuleData')->name('getAjaxModuleData');
-	});
-
+	Route::resource('config', 'ConfigsController');
+	Route::post('module/ajax/ChangeSort', 'ModulesController@ChangeSort')->name('ChangeSort');
+	Route::post('module/ajax/ChangeIsMenu/{id}', 'ModulesController@ChangeIsMenu')->name('ChangeIsMenu');
+	Route::get('module/AjaxModuleData', 'ModulesController@AjaxModuleData')->name('AjaxModuleData');
+	Route::get('module/detail/{id}', 'ModulesController@getItemDetail')->name('getModuleDetail');
+	Route::resource('module', 'ModulesController');
+	//
 });
 
 
-	Route::get('/setting/module/getAjaxModuleData', 'ModulesController@getAjaxModuleData')->name('getAjaxModuleData');
+	//Route::get('/setting/module/getAjaxModuleData', 'ModulesController@getAjaxModuleData')->name('getAjaxModuleData');

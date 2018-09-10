@@ -18,5 +18,12 @@ return [
 	'logout'	=> 'Đăng xuất',
 	'profile'	=> 'Hồ sơ',
 	'username'	=> 'Tên đăng nhập',
-
+	'registerNewUser'	=> 'Đăng ký tài khoản mới',
+	'register'	=> 'Đăng ký',
+	'firstname'	=> 'Tên',
+	'lastname'	=> 'Họ',
+	'mobile'	=> 'Di động',
+	'agreeto'	=> 'Đồng ý với',
+	'term'	=> 'điều khoản',
+	'alreadyaccount'	=> 'Tôi đã có tài khoản',
 ];

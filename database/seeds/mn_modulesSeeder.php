@@ -11,18 +11,13 @@ class mn_modulesSeeder extends Seeder
   */
   protected $modules = [
     [
-      'id'      => 1,
-      'parent'  => NUll,
-      'name'    => 'dashboard',
-      'label'   => 'Tổng hợp',
-      'description' => 'Thống kê công việc',
-      'fa_icon' => 'fa fa-dashboard',
-      'is_menu' => 1,
-      'url'     => 'home',
-      'sort'    => 1,
+      'id'  => 1,'parent'  => 0,'name'  => 'dashboard',
+      'label'   => 'Tổng hợp','description' => 'Thống kê công việc',
+      'fa_icon' => 'fa fa-dashboard','is_menu' => 1,
+      'url'     => '/','sort'    => 1,
     ],[
       'id'      => 2,
-      'parent'  => NUll,
+      'parent'  => 0,
 			'name'		=> 'calendar',
 			'label'		=> 'Lịch',
       'description' => 'Công việc, sự kiện theo ngày tháng',
@@ -32,7 +27,7 @@ class mn_modulesSeeder extends Seeder
       'sort'    => 2,
 		],[
 			'id'       => 3,
-      'parent'   => NULL,
+      'parent'   => 0,
 			'name'     => 'customer',
 			'label'    => 'Khách hàng',
       'description' => 'Thông tin khách hàng',
@@ -42,7 +37,7 @@ class mn_modulesSeeder extends Seeder
       'sort'     => 3,
 		],[
       'id'       => 4,
-      'parent'   => NUll,
+      'parent'   => 0,
       'name'     => 'contact',
       'label'    => 'Danh bạ',
       'description' => 'Thông tin người liên hệ',
@@ -52,7 +47,7 @@ class mn_modulesSeeder extends Seeder
       'sort'     => 4,
 		],[
 			'id'       => 5,
-      'parent'   => NULL,
+      'parent'   => 0,
 			'name'     => 'ticket',
 			'label'    => 'Công việc',
       'description' => 'Danh sách công việc',
@@ -62,7 +57,7 @@ class mn_modulesSeeder extends Seeder
       'sort'     => 5,
 		],[
 			'id'=> 6,
-      'parent'=> Null,
+      'parent'=> 0,
 			'name'=> 'user',
 			'label'=> 'Người dùng',
       'description' => 'Danh mục người dùng',
@@ -72,7 +67,7 @@ class mn_modulesSeeder extends Seeder
       'sort'=> 6,
 		],[
 			'id'       => 7,
-      'parent'   => NULL,
+      'parent'   => 0,
 			'name'     => 'setting',
 			'label'    => 'Thiết lập',
       'description' => 'Chung cho hệ thống',

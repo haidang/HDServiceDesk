@@ -29,7 +29,7 @@
         <li class="header">MENU</li>
         @foreach($menus as $menu)
           @if(count($menu->subMenus)) {{-- //Menu have childs --}}
-            <li class="treeview{{ (Request::route()->getPrefix() == $menu->name.'/'.Route::currentRouteName()) || (Request::is($menu->url)) ? ' active' : '' }}">
+            <li class="treeview{{ (Request::is($menu->name.'/*')) || (Request::is($menu->url)) ? ' active' : '' }}">
               <a href="#">
                 <i class="{{$menu->fa_icon}}"></i> <span>{{ $menu->label }}</span>
                 <span class="pull-right-container">
@@ -38,14 +38,16 @@
               </a>
               <ul class="treeview-menu">
               @foreach($menu->subMenus as $sub) {{-- //Childs Menu --}}
-                  <li{{ (Request::is('*/'.$sub->url)) || (Request::route()->getName() == $menu->url) ? ' class=active' : '' }}><a href="{{route($sub->url)}}"><i class="{{$sub->fa_icon}}"></i> {{ $sub->label}}</a></li>
+                  <li{{ (Request::is('*/'.$sub->url)) || (Request::route()->getName() == $menu->url) ? ' class=active' : '' }}>
+                    <a href="{{ url($menu->name).'/'.$sub->url}}"><i class="{{$sub->fa_icon}}"></i> {{ $sub->label}}</a>
+                  </li>
               @endforeach
               </ul>
             </li>
           @elseif($menu->parent == Null)
             <li{{ (Request::is($menu->url.'/*')) || (Request::route()->getName() == $menu->url) ? ' class=active' : '' }}>
-              <a href="{{ route($menu->url)}}">
-                <i class="{{$menu->fa_icon}}"></i>
+              <a href="{{ ($menu->url == Null) ? url('') : url($menu->url) }}">
+                <i class="{{ $menu->fa_icon}}"></i>
                 <span>{{$menu->label }}</span>
               </a>
             </li>
